@@ -7,17 +7,16 @@ const invoice = JSON.parse(fs.readFileSync('invoices.json'))[0];
 
 function statement(invoice, plays) {
 
-    let totalAmount = appleSauce();
     let result = `청구 내역 (고객명: ${invoice.customer})\n`;
     for (let perf of invoice.performances) {
         result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
     }
 
-    result += `총액 : ${usd(totalAmount)}\n`;
+    result += `총액 : ${usd(totalAmount())}\n`;
     result += `적립 포인트 : ${totalVolumeCredits()}점\n`;
     return result;
 
-    function appleSauce() {
+    function totalAmount() {
         let totalAmount = 0;
         for (let perf of invoice.performances) {
             totalAmount += amountFor(perf);
