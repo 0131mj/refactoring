@@ -1,8 +1,5 @@
 'use strict';
-const fs = require('fs');
-const plays = JSON.parse(fs.readFileSync('plays.json'));
-const invoice = JSON.parse(fs.readFileSync('invoices.json'))[0];
-const createStatementData = require("./createStatementData.js");
+import createStatementData from "./createStatementData.js";
 
 function statement(invoice, plays) {
     return renderPlainText(createStatementData(invoice, plays));
@@ -25,5 +22,20 @@ function renderPlainText(data) {
     }
 }
 
-console.log(statement(invoice, plays));
+Promise.all([
+    fetch('./plays.json'),
+    fetch('./invoices.json')
+]).then(async ([playsData, invoicesData]) => {
+    const plays = await playsData.json();
+    const invoices = await invoicesData.json();
+    return {plays, invoices};
+}).then((data) => {
+    const {plays, invoices} = data;
+    const result = statement(invoices[0], plays);
+    console.log(result);
+}).catch((err) => {
+    console.error(err);
+});
+
+
 
