@@ -1,4 +1,4 @@
-function createStatementData(invoice, plays) {
+export default function createStatementData(invoice, plays) {
     const result = {};
     result.customer = invoice.customer;
     result.performances = invoice.performances.map(enrichPerformance);
@@ -29,8 +29,6 @@ function createStatementData(invoice, plays) {
             .reduce((total, p) => total + p.volumeCredits, 0)
     }
 }
-
-export default createStatementData;
 
 class PerformanceCalculator {
     constructor(aPerformance, aPlay) {
